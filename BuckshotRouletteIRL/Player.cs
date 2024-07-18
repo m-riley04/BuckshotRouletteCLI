@@ -10,7 +10,14 @@ namespace BuckshotRouletteIRL
     public class Player
     {
         public List<Item> Items = new();
-        public int Health = 2;
-        public bool IsHandcuffed = false;
+        public readonly string Name = "Player";
+        public int Health { get; set; } = 2;
+        public int TotalWins { get; set; } = 0;
+        public bool IsHandcuffed { get; set; } = false;
+
+        public Player(string name)
+        {
+            Name = name;
+        }
     }
 }
