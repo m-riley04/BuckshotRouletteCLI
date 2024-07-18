@@ -8,6 +8,7 @@ namespace BuckshotRouletteIRL.Enums
 {
     public enum ShellEnum 
     { 
+        None,
         Blank,
         Live
     }
