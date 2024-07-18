@@ -12,8 +12,30 @@ namespace BuckshotRouletteIRL
     {
         public ShotgunStatistics Stats = new();
 
-        public Queue<ShellEnum> magazine = new();
+        public Queue<ShellEnum> Magazine = new();
         public bool IsSawedOff = false;
+
+        /// <summary>
+        /// The live shells in the current magazine
+        /// </summary>
+        public int LiveShells
+        {
+            get
+            {
+                return Magazine.Where(s => s != null && s == ShellEnum.Live).Count();
+            }
+        }
+
+        /// <summary>
+        /// The blank shells in the current magazine
+        /// </summary>
+        public int BlankShells
+        {
+            get
+            {
+                return Magazine.Where(s => s != null && s == ShellEnum.Blank).Count();
+            }
+        }
 
         /// <summary>
         /// The shell that is currently in the chamber
@@ -22,7 +44,7 @@ namespace BuckshotRouletteIRL
         {
             get
             {
-                return magazine.Peek();
+                return Magazine.Peek();
             } 
         }
 
@@ -32,8 +54,13 @@ namespace BuckshotRouletteIRL
         /// <returns>The state of the shell that was fired</returns>
         public ShellEnum Fire()
         {
+            if (Magazine.Count <= 0)
+            {
+                return ShellEnum.None;
+            }
+
             Stats.TotalFired++;
-            return magazine.Dequeue();
+            return Magazine.Dequeue();
         }
 
         /// <summary>
@@ -42,8 +69,13 @@ namespace BuckshotRouletteIRL
         /// <returns>The state of the shell that was racked</returns>
         public ShellEnum Rack()
         {
+            if (Magazine.Count <= 0)
+            {
+                return ShellEnum.None;
+            }
+
             Stats.TotalRacked++;
-            return magazine.Dequeue();
+            return Magazine.Dequeue();
         }
 
         /// <summary>
@@ -53,7 +85,7 @@ namespace BuckshotRouletteIRL
         public void LoadShell(ShellEnum shell)
         {
             Stats.TotalLoaded++;
-            magazine.Enqueue(shell);
+            Magazine.Enqueue(shell);
         }
 
         /// <summary>
@@ -74,7 +106,7 @@ namespace BuckshotRouletteIRL
 
             // Randomize the order of shells
             Random rng = new Random();
-            magazine = new Queue<ShellEnum>(magazine.OrderBy(_ => rng.Next()));
+            Magazine = new Queue<ShellEnum>(Magazine.OrderBy(_ => rng.Next()));
         }
     }
 }
